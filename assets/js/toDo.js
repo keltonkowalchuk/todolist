@@ -8,12 +8,30 @@ var toDoController = {
 	
 	totalTodos: 0,
 	toDoList: [],
+
+	init : function() {
+		toDoController.bindActions();
+	},
+
+	bindActions : function() {
+		$('.inputToDo').on("keyup", function(e){
+			if(e.keyCode == 13){
+				var text = $('.inputToDo').val();
+				toDoController.createToDoItem(text);
+				$('.inputToDo').val('');
+			}
+		});
+
+		$(document).on("click", ".checkbox input", function(){
+			toDoController.completeToDoItem($(this).attr("id"));
+		});
+	},
   
 	createToDoItem : function(text) {
-		var toDoItem = new toDoItem(this.totalTodos,text);
-		this.toDoList.push(toDoItem);
+		var newToDoItem = new toDoItem(this.totalTodos,text);
+		this.toDoList.push(newToDoItem);
 		this.totalTodos++;
-		this.updateListView();
+		this.updateView();
 	},
 	
 	completeToDoItem : function(id) {
@@ -22,10 +40,10 @@ var toDoController = {
 				this.toDoList[i].isComplete = true; 
 			}
 		}
-		toDoController.updateListView();
+		this.updateView();
 	},
   
-	updateListView : function() {
+	updateView : function() {
 		document.getElementById('checkList').innerHTML = '';
 		for(i in this.toDoList) {
 			if(!this.toDoList[i].isComplete) {
@@ -35,31 +53,9 @@ var toDoController = {
 				document.getElementById('checkList').appendChild(div);
 			}
 		}	
-	},
-
-	init : {
-
-		createDisplay : function() {
-			$('.inputToDo').on("keyup", function(e){
-				if(e.keyCode == 13){
-					var text = $('.inputToDo').val();
-					toDoController.createToDoItem(text);
-					$('.inputToDo').val('');
-				}
-			});
-		},
-
-		deleteDisplay : function() {
-			$(document).on("click", ".checkbox input", function(){
-				toDoController.completeToDoItem($(this).attr("id"));
-				$(this).parent().parent().hide();
-			})
-		}
 	}
-
 };
 
 $(document).ready(function(){
-	toDoController.init.createDisplay();
-	toDoController.init.deleteDisplay();
+	toDoController.init();
 });
