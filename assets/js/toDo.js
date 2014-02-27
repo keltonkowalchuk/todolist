@@ -24,7 +24,7 @@ var toDoController = {
 		});
 		// On click of checkbox, mark item as completed
 		$(document).on("click", ".checkbox input", function(){
-			toDoController.completeToDoItem($(this).attr("id"));
+			toDoController.toggleToDoItem($(this).attr("id"));
 		});
 	},
   
@@ -37,9 +37,9 @@ var toDoController = {
 		this.updateView();
 	},
 	
-	completeToDoItem : function(id) {
-		// Set toDo matching ID to complete
-		this.toDoList[id].isComplete = true;
+	toggleToDoItem : function(id) {
+		// Set toDo matching ID to complete/incomplete
+		this.toDoList[id].isComplete = !this.toDoList[id].isComplete;
 		// Update HTML
 		this.updateView();
 	},
@@ -47,13 +47,18 @@ var toDoController = {
 	updateView : function() {
 		// Erase HTML
 		document.getElementById('checkList').innerHTML = '';
+		document.getElementById('completed').innerHTML = '';
 		// Loop through list and display noncomplete toDos
 		for(var i in this.toDoList) {
+			var div = document.createElement('div');
+			div.className = 'checkbox';
+			
 			if(!this.toDoList[i].isComplete) {
-				var div = document.createElement('div');
-				div.className = 'checkbox';
 				div.innerHTML = '<label> <input type="checkbox" id="'+ this.toDoList[i].id +'" value="">' + this.toDoList[i].text + '</label>';
 				document.getElementById('checkList').appendChild(div);
+			} else {
+				div.innerHTML = '<label> <input type="checkbox" id="'+ this.toDoList[i].id +'" value="" checked>' + this.toDoList[i].text + '</label>';
+				document.getElementById('completed').appendChild(div);
 			}
 		}	
 	}
