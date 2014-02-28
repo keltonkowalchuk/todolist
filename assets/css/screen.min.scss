@@ -31,12 +31,20 @@ body {
 	}
 }
 
+.delete {
+	color: #c0392b;
+
+	&:hover {
+		color: lighten(#c0392b, 30%);
+	}
+}
+
 // Bootstrap OverRides
 .container {
 	-webkit-border-radius: 25px;
 	-moz-border-radius: 25px;
 	border-radius: 25px;
-	background-color: #f7f7f9;
+	background-color: none;
 	border: 1px solid #e1e1e8;
 	margin: 3em auto 0;
 	padding: 0 30px;

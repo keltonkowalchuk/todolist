@@ -23,8 +23,12 @@ var toDoController = {
 			}
 		});
 		// On click of checkbox, mark item as completed
-		$(document).on("click", ".checkbox input", function(){
+		$(document).on("change", "[type='checkbox']", function(){
 			toDoController.toggleToDoItem($(this).attr("id"));
+		});
+
+		$(document).on("click", "a.delete", function(){
+			toDoController.deleteToDoItem($(this).attr("id"));
 		});
 	},
   
@@ -33,6 +37,13 @@ var toDoController = {
 		var newToDoItem = new toDoItem(this.totalTodos++,text);
 		// Add toDoItem to hashmap
 		this.toDoList[newToDoItem.id] = newToDoItem;
+		// Update HTML
+		this.updateView();
+	},
+
+	deleteToDoItem : function(id) {
+		// Delete item from hashmap based on id
+		delete this.toDoList[id];
 		// Update HTML
 		this.updateView();
 	},
@@ -46,19 +57,16 @@ var toDoController = {
   
 	updateView : function() {
 		// Erase HTML
-		document.getElementById('checkList').innerHTML = '';
-		document.getElementById('completed').innerHTML = '';
-		// Loop through list and display noncomplete toDos
+		$('.todo-checklist tbody').html('');
+		$('.completed-checklist tbody').html('');
+		// Loop through list and add toDos to either checklist or completed
 		for(var i in this.toDoList) {
-			var div = document.createElement('div');
-			div.className = 'checkbox';
-			
 			if(!this.toDoList[i].isComplete) {
-				div.innerHTML = '<label> <input type="checkbox" id="'+ this.toDoList[i].id +'" value="">' + this.toDoList[i].text + '</label>';
-				document.getElementById('checkList').appendChild(div);
+				var newRow = '<tr><td class="col-md-1"><input type="checkbox" id="'+ this.toDoList[i].id +'"></td><td class="col-md-10">' + this.toDoList[i].text + '</td><td class="col-md-1 text-right"><a href="#" id="'+ this.toDoList[i].id +'" class="delete"><i class="glyphicon glyphicon-remove"></i></a></td></tr>';
+				$('.todo-checklist tbody').append(newRow);
 			} else {
-				div.innerHTML = '<label> <input type="checkbox" id="'+ this.toDoList[i].id +'" value="" checked>' + this.toDoList[i].text + '</label>';
-				document.getElementById('completed').appendChild(div);
+				var newRow = '<tr><td class="col-md-1"><input type="checkbox" id="'+ this.toDoList[i].id +'" checked></td><td class="col-md-10">' + this.toDoList[i].text + '</td><td class="col-md-1 text-right"><a href="#" id="'+ this.toDoList[i].id +'" class="delete"><i class="glyphicon glyphicon-remove"></i></a></td></tr>';
+				$('.completed-checklist tbody').append(newRow);
 			}
 		}	
 	}
